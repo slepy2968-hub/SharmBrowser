@@ -1,0 +1,11 @@
+bin/
+obj/
+release/
+.vs/
+*.user
+*.suo
+*.tmp
+performance-*.json
+test-results.txt
+*-preview.png
+preview.png
