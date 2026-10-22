@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ru">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="strict-origin-when-cross-origin"><title>YouTube</title>
+<style>*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#111;color:#ddd;font:13px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}body{display:flex;flex-direction:column}header{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;flex-shrink:0}span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-right:20px}button{background:#242424;border:1px solid #363636;border-radius:15px;color:#ccc;padding:6px 12px;cursor:pointer;white-space:nowrap}button:hover{background:#333}button:focus-visible{outline:1px solid #aaa}main{flex:1;min-height:0}#player{height:100%;width:100%}</style>
+</head><body><header><span id="title">YouTube</span><button id="full">Полная страница</button></header><main><div id="player"></div></main>
+<script>
+const videoId=new URL(location.href).searchParams.get('v');
+function openFull(){chrome.webview.postMessage('sharm:youtube-full')}
+document.getElementById('full').addEventListener('click',openFull);
+function onYouTubeIframeAPIReady(){
+ if(!/^[\w-]{11}$/.test(videoId||'')){openFull();return}
+ window.player=new YT.Player('player',{videoId,playerVars:{autoplay:1,playsinline:1,start:Math.max(0,Math.min(86400,Number(new URL(location.href).searchParams.get('start'))||0)),origin:location.origin},events:{
+ onReady:e=>{const title=e.target.getVideoData()?.title;if(title){document.title=title;document.getElementById('title').textContent=title}if(window.sharmResume>0)e.target.seekTo(window.sharmResume,true)},
+ onError:()=>openFull()
+ }})
+}
+</script><script src="https://www.youtube.com/iframe_api"></script></body></html>
